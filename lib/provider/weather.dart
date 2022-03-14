@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:bloc_example/model/weather.dart';
 import 'package:meta/meta.dart';
@@ -13,6 +14,9 @@ class WeatherProvider {
   Future<int> getLocationId(String city) async {
     final locationUrl = '$baseUrl/api/location/search/?query=$city';
     final locationResponse = await this.httpClient.get(Uri.tryParse(locationUrl));
+
+    log('$locationUrl $locationResponse');
+
     if (locationResponse.statusCode != 200) {
       throw Exception('error getting locationId for city');
     }
@@ -24,6 +28,8 @@ class WeatherProvider {
   Future<Weather> fetchWeather(int locationId) async {
     final weatherUrl = '$baseUrl/api/location/$locationId';
     final weatherResponse = await this.httpClient.get(Uri.tryParse(weatherUrl));
+
+    log('$weatherUrl $weatherResponse');
 
     if (weatherResponse.statusCode != 200) {
       throw Exception('error getting weather for location');

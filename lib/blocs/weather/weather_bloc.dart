@@ -21,12 +21,12 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   ) async {
     emit.call(WeatherLoading());
 
-    _weatherRepository.getWeather(event.cityName)
+    await _weatherRepository.getWeather(event.cityName)
     .then((value) {
       emit.call(WeatherLoadSuccess(weather: value));
     })
     .onError((error, stackTrace) {
-      _onError(error, stackTrace, emit);
+      _onError(error.toString(), stackTrace, emit);
     })
     .timeout(const Duration(seconds: 10), onTimeout: () {
       _onError('Error Timeout', null, emit);
