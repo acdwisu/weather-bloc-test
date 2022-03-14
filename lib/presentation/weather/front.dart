@@ -15,7 +15,7 @@ class WeatherFront extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<WeatherBloc>(
       create: (ctx) => WeatherBloc(weatherRepository),
-      child: const WeatherContent(),
+      child: WeatherContent(),
     );
   }
 }
