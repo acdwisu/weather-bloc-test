@@ -19,12 +19,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('build');
     return BlocProvider(
       create: (ctx) => ThemeBloc(),
       child: BlocBuilder<ThemeBloc, ThemeState>(
         builder: (BuildContext ctx2, ThemeState themeState) {
-          print('MaterialApp');
           return MaterialApp(
             title: 'Weather Bloc Test',
             theme: themeState.theme,

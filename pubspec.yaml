@@ -38,6 +38,7 @@ dependencies:
   bloc: ^7.1.0
   http: ^0.13.3
   equatable: ^0.1.0
+  fluttertoast: ^8.0.9
 
 dev_dependencies:
   flutter_test:

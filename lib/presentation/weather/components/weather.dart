@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:bloc_example/blocs/theme/theme_bloc.dart';
 import 'package:bloc_example/blocs/weather/weather_bloc.dart';
@@ -7,7 +6,7 @@ import 'package:bloc_example/model/weather.dart';
 import 'package:bloc_example/utils/gradient-container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
 import 'city-selection.dart';
 import 'combined-weather-temperature.dart';
 import 'last-updated.dart';
@@ -50,6 +49,10 @@ class WeatherContent extends StatelessWidget {
               final ThemeBloc themeBloc = BlocProvider.of<ThemeBloc>(ctx);
 
               themeBloc.add(WeatherChanged(state.weather.condition));
+            } else if(state is WeatherLoadFail) {
+              if(state.weather != null) {
+                Fluttertoast.showToast(msg: 'Something went wrong!. Refresh Failed');
+              }
             }
           },
           builder: (ctx, WeatherState state) {
@@ -61,9 +64,6 @@ class WeatherContent extends StatelessWidget {
             }
             else if (state is WeatherLoadSuccess) {
               final weather = state.weather;
-
-              _refreshCompleter?.complete();
-              _refreshCompleter = Completer();
 
               return _weatherView(weather, weatherBloc);
             }

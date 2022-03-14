@@ -26,20 +26,21 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
       emit.call(WeatherLoadSuccess(weather: value));
     })
     .onError((error, stackTrace) {
-      _onError(error.toString(), stackTrace, emit);
+      _onError(error.toString(), stackTrace, emit, event);
     })
     .timeout(const Duration(seconds: 10), onTimeout: () {
-      _onError('Error Timeout', null, emit);
+      _onError('Error Timeout', null, emit, event);
     });
   }
 
-  void _onError(String error, StackTrace trace, Emitter<WeatherState> emit) {
+  void _onError(String error, StackTrace trace, Emitter<WeatherState> emit, WeatherRequest event) {
     log(error, stackTrace: trace);
 
     emit.call(
         WeatherLoadFail(
             error: error,
-            weather: _weatherRepository.lastFetchedWeather
+            weather: event.cityName==_weatherRepository.lastFetchedWeather.location?
+              _weatherRepository.lastFetchedWeather : null,
         )
     );
   }
