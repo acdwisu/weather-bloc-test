@@ -1,18 +1,33 @@
+import 'package:bloc/bloc.dart';
 import 'package:data/data.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:meta/meta.dart';
 
-part 'theme_event.dart';
+part 'setting_event.dart';
+part 'setting_state.dart';
 
-class ThemeBloc extends Bloc<ThemeEvent, ThemeData> {
-  ThemeBloc() : super(ThemeData.light()) {
+class SettingBloc extends Bloc<SettingEvent, SettingState> {
+  SettingBloc() : super(SettingState(
+    temperatureUnit: TemperatureUnit.CELCIUS
+  )) {
+    on<TemperatureUnitChanged>(_onTemperatureUnitChanged);
     on<WeatherChanged>(_onWeatherChanged);
+  }
+
+  void _onTemperatureUnitChanged(
+      TemperatureUnitChanged event,
+      Emitter<SettingState> emit,
+      ) {
+    _emitGuard(state.copyWith(
+      temperatureUnit: event.newTemperature
+    ));
   }
 
   void _onWeatherChanged(
       WeatherChanged event,
-      Emitter<ThemeData> emit,
-      ) async {
+      Emitter<SettingState> emit,
+      ) {
     ThemeData themeData;
 
     switch(event.condition) {
@@ -51,6 +66,12 @@ class ThemeBloc extends Bloc<ThemeEvent, ThemeData> {
         break;
     }
 
-    emit.call(themeData);
+    _emitGuard(state.copyWith(
+      themeData: themeData,
+    ));
+  }
+
+  void _emitGuard(SettingState settingState) {
+    emit.call(settingState);
   }
 }

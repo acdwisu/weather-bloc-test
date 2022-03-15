@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:bloc_example/domain/search/pages/city-selection.dart';
+import 'package:bloc_example/domain/search/components/search-button.dart';
+import 'package:bloc_example/domain/setting/components/setting-button.dart';
 import 'package:data/data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,20 +25,10 @@ class WeatherContent extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Weather'),
         actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () async {
-              final city = await Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CitySelection(),
-                ),
-              );
-              if (city != null) {
-                weatherBloc.add(WeatherRequest(cityName: city));
-              }
-            },
-          )
+          SearchButton(
+            weatherBloc: weatherBloc,
+          ),
+          const SettingButton(),
         ],
       ),
       body: Center(
@@ -45,9 +36,9 @@ class WeatherContent extends StatelessWidget {
           bloc: weatherBloc,
           listener: (ctx, WeatherState state) {
             if(state is WeatherLoadSuccess) {
-              final ThemeBloc themeBloc = BlocProvider.of<ThemeBloc>(ctx);
+              final SettingBloc settingBloc = BlocProvider.of<SettingBloc>(ctx);
 
-              themeBloc.add(WeatherChanged(state.weather.condition));
+              settingBloc.add(WeatherChanged(state.weather.condition));
             } else if(state is WeatherLoadFail) {
               if(state.weather != null) {
                 Fluttertoast.showToast(msg: 'Something went wrong!. Refresh Failed');

@@ -19,12 +19,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (ctx) => ThemeBloc(),
-      child: BlocBuilder<ThemeBloc, ThemeData>(
-        builder: (BuildContext ctx2, ThemeData themeData) {
+      create: (ctx) => SettingBloc(),
+      child: BlocBuilder<SettingBloc, SettingState>(
+        buildWhen: (SettingState prevState, SettingState state) {
+          bool rebuild = prevState==null || prevState.themeData
+              != state.themeData;
+
+          return rebuild;
+        },
+        builder: (BuildContext ctx, SettingState settingState) {
           return MaterialApp(
             title: 'Weather Bloc Test',
-            theme: themeData,
+            theme: settingState.themeData,
             home: WeatherFront(
               weatherRepository: WeatherRepository(
                   WeatherProvider(httpClient: Client())
