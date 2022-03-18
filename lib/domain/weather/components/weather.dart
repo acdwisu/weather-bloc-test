@@ -38,6 +38,8 @@ class WeatherContent extends StatelessWidget {
             if(state is WeatherLoadSuccess) {
               final SettingBloc settingBloc = BlocProvider.of<SettingBloc>(ctx);
 
+              _refreshCompleter.complete(null);
+
               settingBloc.add(WeatherChanged(state.weather.condition));
             } else if(state is WeatherLoadFail) {
               if(state.weather != null) {
